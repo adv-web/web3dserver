@@ -90,7 +90,9 @@ io.on('connection', (client) =>
   client.on('disconnect',() =>
     # Useful to know when soomeone disconnects
     console.log('\t socket.io:: client ' + client.id + ' disconnected game  ' + client.game.id)
+    # tell other players this player left their game
     for id, p of client.game.players
-      p.send('s.ol'+client.id) if client.id  != id
+      p.send('s.ol.'+client.id) if client.id  != id
+    delete client.game.players[client.id]
   ) #client.on disconnect
 ) # sio.sockets.on connection

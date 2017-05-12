@@ -78,5 +78,17 @@ Each client will run the game locally and they will send synchronization message
 
 ### Network Manager
 
+**Network Manager** is unique in the client. It will do many works that are simply classified as follows:
+
+1. It will connect to the server. Besides, it will receive and handle message about that other players join and leave the game, and send message to server if we leave the game. Mostly important, it will store and maintain the socket. and other class can use this socket to register event or emit message
+2. It will store and maintain the prefabs of game objects. Recall **GameManager** on the server, this class will receive the spawn or destroy message from **GameManager**. And then it will do the work of spawn objects to the scene. And then it will store theses objects in order to destroy them later
+
+### Components
+
+These Components are totally different from the **Components** on the server although the names of some components may be the same. These components are designed according to the core concept 'Component' of our web3d framework and so, they will be easily to used in our game codes. they will do these works.
+
+1. NetworkComponent: this component distinguish the local player from others. To use it, you the to create a component to extends it.
+2. NetworkTransformCompnent: synchronize the transform of the game object that changed frequently such as player object.
+
 
 

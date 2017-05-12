@@ -10,8 +10,7 @@ class NetWorkTransformComponent extends NetWorkComponent
     @networkSendRate = 1000
 
   onStartServerPlayer: () =>
-    event = "nwtc.player"
-    @player.on(event, (data) =>
+    @player.on("nwtc", (data) =>
       for id, p of @player.game.players
-        p.emit(event, data) if @player.id  != id
+        p.emit(data.event, data) if @player.id  != id
     )
