@@ -1,0 +1,17 @@
+{
+  "name": "web3d",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "coffee -c -m src/",
+    "node:serve": "node src/app.js",
+    "start": "npm run build && npm run node:serve"
+  },
+  "dependencies": {
+    "express": "^4.15.2",
+    "node-uuid": "^1.4.8",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.12.5"
+  }
+}

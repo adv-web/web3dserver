@@ -1,0 +1,12 @@
+# webstorm generated file
+.idea/
+
+# npm package
+node_modules/
+
+# complie file
+*.map
+*.js
+
+# test file
+src/test/
