@@ -14,31 +14,34 @@ There is a 'game manager' for each game lobby.  And it's work is focused on hand
 
 some methods are as follows:
 
-1. **constructor()**:
+1. **constructor(host)**:
 
    initialize the Network Manager
 
+   register object.update listener for the host
+
+2.  **_registerObjectUpdate (player)**:
    register the event:
 
    socket.on("object.update", (data)=>
 
-   ​	\# data.header structure: 
+   ​	\# data.action 
 
-   ​	\# 1. s.prefabId (prefabId is key decided by programmer)
+   ​	\# 1. s
 
    ​		return spawn(data) \# body message should specify the position and rotation message.
 
-   ​	\# 2. d.objectId (UUID)
+   ​	\# 2. d
 
    ​		return destrody(data)
 
-   ​        \# 3. u.objectId
+   ​        \# 3. u
 
    ​		update the status of the object
 
    )
 
-2. **spawn(data)**: 
+3. **spawn(data)**: 
 
    \# some codes to decide whether this operation is legal
 
@@ -48,11 +51,11 @@ some methods are as follows:
 
    \# add to data
 
-   data.body.objectId = objectId
+   data.objectId = objectId
 
    allsockets.emit("object.update", data)
 
-3. **destrody(data)**:
+4. **destrody(data)**:
 
    \# some codes to decide whether this operation is legal
 
@@ -62,7 +65,25 @@ some methods are as follows:
 
    allsockets.destroy("object.update", data)
 
-I will be too complicated to do all this work in this class, so here I provide a load(component) function to let you definite a component to listen to message and handle the message
+5. **update(data)**:
+
+   check whether it's legal
+
+   update the status if it's legal
+
+6. **addPlayer(player)**: 
+
+   store this socket and regieter the object.update listener
+
+7. **removePlayer(player)**
+
+   remove the object.update listener for this player
+
+   update host if player is host
+
+   destroy this game if there is no player in the game
+
+It will be too complicated to do all this work in this class, so here I provide a load(component) function to let you definite a component to listen to message and handle the message
 
 ### Components
 

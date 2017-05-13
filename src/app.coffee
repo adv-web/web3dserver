@@ -18,7 +18,6 @@ server.listen(port,()->
   console.log("server started at port: %s", port)
 )
 
-
 # Express server set up
 
 # The express server handles passing our content to the browser,
@@ -47,7 +46,6 @@ app.get( '/*' , ( req, res, next ) ->
 # end of Express Server
 
 
-
 # Socket.IO server set up. */
 
 # Express and socket.io can work together to serve the socket.io client files for you.
@@ -72,12 +70,12 @@ io.on('connection', (client) =>
   # tell the player they connected, giving them their id
   client.emit('onconnected', { id: client.id } )
 
+  # Useful to know when someone connects
+  console.log('\t socket.io:: player ' + client.id + ' connected')
+
   # now we can find them a game to play with someone.
   # if no game exists with someone waiting, they create one and wait.
   gameServer.findGame(client)
-
-  # Useful to know when someone connects
-  console.log('\t socket.io:: player ' + client.id + ' connected')
 
   # Now we want to handle some of the messages that clients will send.
   # They send messages here, and we send them to the gameServer to handle.
@@ -90,9 +88,7 @@ io.on('connection', (client) =>
   client.on('disconnect',() =>
     # Useful to know when soomeone disconnects
     console.log('\t socket.io:: client ' + client.id + ' disconnected game  ' + client.game.id)
-    # tell other players this player left their game
-    for id, p of client.game.players
-      p.send('s.ol.'+client.id) if client.id  != id
-    delete client.game.players[client.id]
+    # remove the player from his game if he is in some game
+    client.game?.removePlayer(client)
   ) #client.on disconnect
 ) # sio.sockets.on connection
