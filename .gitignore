@@ -7,6 +7,7 @@ node_modules/
 # complie file
 *.map
 *.js
+!src/static/*
 
 # test file
-src/test/
+test/
