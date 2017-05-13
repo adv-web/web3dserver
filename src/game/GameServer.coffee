@@ -1,16 +1,15 @@
 # Created by duocai on 2017/5/10.
 
-# UUID
-UUID = require('node-uuid')
-verbose = true
-# Since we are sharing code with the browser, we
-# are going to include some values to handle that.
-global.window = global.document = global
-
 #Import shared game library code.
 GameManager = require('./GameManager')
 NetWorkTransformComponent = require('./component/NetWorkTransformComponent')
+# UUID
+UUID = require('node-uuid')
+verbose = true
 
+# This class handle the message about players create a game, players join
+# a game, players leave a game and host start a game and so on. these messages
+# are same for all games.
 class GameServer
   module.exports = this
 
