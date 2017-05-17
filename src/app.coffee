@@ -1,13 +1,14 @@
 # Created by duocai on 2017/4/28.
 
 # init express
-app = require('express')();
+app = require('express')()
 # create a http server
-server = require('http').Server(app);
+server = require('http').Server(app)
 # get socket io
 io = require('socket.io')(server)
 # server port
 port = process.env.PORT || 5000
+
 
 
 #start server (http server)

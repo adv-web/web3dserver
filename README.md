@@ -22,3 +22,4 @@
 ## Documentations
 
 1. [Design Documentation](./doc/design.md)
+2. [API DOC](./doc/api_doc.md): how to use apis like login, register and so on.
