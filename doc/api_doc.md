@@ -41,7 +41,18 @@ some data type declarations
 
    ```javascript
    // this the api for log out
-   // not implemented now
+   // no parameter, the server will check whether the session was setted
+
+   // return
+   // if success
+   {
+     success: true
+   }
+   // else fail
+   {
+     success: false,
+     err: "No such resources." // or something else
+   }
    ```
 
 3. /user POST
@@ -55,6 +66,18 @@ some data type declarations
      password: string,
      // other properties
    }
+     
+   // return
+   // if success
+   {
+   	success: true
+   	user: userObject 
+   }
+   // else err
+   {
+   	success: false
+   	err: "The username is already existed." //or something else
+   }
    ```
 
 4. /user/:id PUT
@@ -62,8 +85,20 @@ some data type declarations
    ```javascript
    // update the user message
 
-   //parameters
+   // parameters
    userObejct
+
+   // if success
+   {
+     success: true,
+     user: userObject // new user
+   }
+
+   // falil
+   {
+     success: false,
+     err: err message
+   }
    ```
 
 5. /user/:id DELETE
@@ -71,36 +106,27 @@ some data type declarations
    ```javascript
    // delete the user
 
-   // parameters
+   // no parameter, the server will check whether the session was setted
+
+   // return
+   // if success
    {
-     username: string
-     password: string
+     success: true
+   }
+   // else fail
+   {
+     success: false,
+     err: "You have never login in." // or "permission denied" for you want to delele other 	user
    }
    ```
 
-6. /users GET
-
-   ```javascript
-   // get all users
-   return
-   [
-   	userobject1,
-   	userobject2,
-   	...
-   	userobejctN
-   ]
-   ```
-
-7. /user/:id GET
+6. /user/:id GET
 
    ```javascript
    // get one user
 
    return
-   // if the user is existed
-   userObject
-   //else
-   null
+   // what do you want to be returned??
    ```
 
    ​

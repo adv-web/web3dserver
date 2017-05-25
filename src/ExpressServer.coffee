@@ -6,6 +6,8 @@ verbose = true;
 orm = require('orm')
 User = require('./entity/User')
 bodyParser = require('body-parser')
+session = require('express-session')
+cookieParser = require('cookie-parser')
 
 # The express server handles passing our content to the browser,
 # As well as routing users where they need to go. This example is bare bones
@@ -19,43 +21,117 @@ class ExpressServer
     @app.use(orm.express("mysql://root:123456@120.76.125.35:3306/web3d", {
       # register models
       define: (db, models, next) =>
-        models.user = User.instance?(db)
+        models.User = User.instance?(db)
         next()
     }))
     @app.use(bodyParser.json({limit: '1mb'}))
     @app.use(bodyParser.urlencoded({extended: false}))
+    @app.use(cookieParser())
+    @app.use(session({
+      secret: "web3d server"
+    }))
   start: () =>
-
-    # get all users
-    @app.get('/users',  (req, res) ->
-      req.models.user.all({}, (err, users) ->
-        res.send(users)
-      )
-    )
 
     # get message of user[id]
     @app.get('/user/:id', (req, res) ->
-      req.models.user.get(req.params.id, (err,user) ->
-        console.log user
-        res.send user
-      )
+      res.send({
+        id : req.params.id
+      })
     )
 
     # add a new user
     @app.post('/user', (req, res) ->
-      username = req.body.username
+      if verbose
+        console.log("register:", req.body)
+
       result = {}
-      req.models.user.find({username: username}, (err, user) ->
-        if user
+      # check valid
+      if req.body.username == "" or req.body.password == ""
+        result.success = false
+        result.err = "username or password can not be empty."
+        req.send(result)
+        return
+
+      # handle register
+      req.models.User.find({username: req.body.username}, (err, user) ->
+        if user.length > 0
           result.success = false
           result.err = "The username is already existed."
+          res.send(result)
         else
-          result.success = true
-          req.models.create(req.body, (err, results) ->
-
+          req.models.User.create(
+            {
+              username: req.body.username
+              password: req.body.password
+            },
+            # results
+            (err, user) ->
+              result = {}
+              if err
+                result.success = false
+                result.err = err
+              else
+                # set session
+                req.session.user = user
+                result.success = true
+                result.user = user
+                if verbose
+                  console.log(user)
+              res.send(result)
           )
+      )
+    )
+
+    # login in
+    @app.post('/session', (req, res) ->
+      if verbose
+        console.log("Login in:", req.body)
+      result = {}
+      req.models.User.find({username: req.body.username}, (err, user) ->
+        if user.length > 0
+          if user[0].password == req.body.username
+            req.session.user == user
+            result.success = true
+            result.user = user
+          else
+            result.success = false
+        else
+          result.success = false
+          result.err = "username or password is wrong."
         res.send(result)
       )
+    )
+
+    # logout
+    @app.delete('/session', (req, res) ->
+      if verbose
+        console.log("Login out:", req.ip)
+      result = {}
+      if req.session.user isnt (undefined  or null)
+        result.success = true
+        req.session.user == null
+      else
+        result.success = false
+        result.err = "No such resources."
+      res.send(result)
+    )
+
+    # delete the user message
+    @app.delete('/user/:id', (req, res) ->
+      if verbose
+        console.log("delete user: ", req.ip)
+      result = {}
+      if req.session.user isnt (undefined  or null)
+        if req.params.id isnt req.session.id
+          result.success = false
+          req.err = "permission denied."
+        else
+          result.success = true
+          req.session.user == null
+      else
+        result.success = false
+        result.err = "You have never login in."
+      res.send(result)
     )
 
     # express router

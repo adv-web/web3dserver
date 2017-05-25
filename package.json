@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
+    "express-session": "^1.15.3",
     "mysql": "^2.12.0",
     "node-uuid": "^1.4.8",
     "orm": "^3.2.3",

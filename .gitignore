@@ -9,6 +9,4 @@ node_modules/
 *.js
 !src/static/*
 
-# test file
-test/
 
