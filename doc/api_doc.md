@@ -120,13 +120,18 @@ some data type declarations
    }
    ```
 
-6. /user/:id GET
+6. /session GET
 
    ```javascript
-   // get one user
+   // get one user session
+
+   // no parameter, the server will check whether the session was setted
 
    return
-   // what do you want to be returned??
+   // if success
+   userObject
+   // falil
+   "No such resources."
    ```
 
    ​

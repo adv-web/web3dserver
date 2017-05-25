@@ -10,3 +10,5 @@ console.log(g)
 
 delete g["a"]
 console.log(g)
+
+console.log(undefined)

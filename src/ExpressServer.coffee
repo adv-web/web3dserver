@@ -33,10 +33,14 @@ class ExpressServer
   start: () =>
 
     # get message of user[id]
-    @app.get('/user/:id', (req, res) ->
-      res.send({
-        id : req.params.id
-      })
+    @app.get('/session/', (req, res) ->
+      if verbose
+        console.log("user session: ", req.session.user)
+      if req.session.user != undefined
+        res.send(req.session.user)
+      else
+        res.status(404)
+        res.send("No such resources")
     )
 
     # add a new user
@@ -107,9 +111,9 @@ class ExpressServer
       if verbose
         console.log("Login out:", req.ip)
       result = {}
-      if req.session.user isnt (undefined  or null)
+      if req.session.user != undefined
         result.success = true
-        req.session.user == null
+        req.session.user == undefined
       else
         result.success = false
         result.err = "No such resources."
@@ -121,13 +125,13 @@ class ExpressServer
       if verbose
         console.log("delete user: ", req.ip)
       result = {}
-      if req.session.user isnt (undefined  or null)
+      if req.session.user != undefined
         if req.params.id isnt req.session.id
           result.success = false
           req.err = "permission denied."
         else
           result.success = true
-          req.session.user == null
+          req.session.user == undefined
       else
         result.success = false
         result.err = "You have never login in."
