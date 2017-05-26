@@ -16,6 +16,9 @@ cookieParser = require('cookie-parser')
 class ExpressServer
   module.exports = @
 
+  # init a express server
+  #   init database connector
+  #   init other servers
   constructor: (@app) ->
     # create database connection
     @app.use(orm.express("mysql://root:123456@120.76.125.35:3306/web3d", {
@@ -30,6 +33,9 @@ class ExpressServer
     @app.use(session({
       secret: "web3d server"
     }))
+
+  # start server
+  # set up express router
   start: () =>
 
     # get message of user[id]
