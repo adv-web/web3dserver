@@ -137,21 +137,3 @@ class ExpressServer
         result.err = "You have never login in."
       res.send(result)
     )
-
-    # express router
-    @app.get('/', (req, res) ->
-      res.sendFile(__dirname + '/index.html')
-    )
-
-    # This handler will listen for requests on /*, any file from the root of our server.
-    # See expressjs documentation for more info on routing.
-    @app.get( '/*' , ( req, res) ->
-    # This is the current file they have requested
-      file = req.params[0]
-
-      # For debugging, we can track what files are requested.
-      console.log('\t :: Express :: file requested : ' + file) if verbose
-
-      # Send the requesting client the file.
-      res.sendfile( __dirname + '/' + file )
-    )# app.get *

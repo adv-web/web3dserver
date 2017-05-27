@@ -29,12 +29,12 @@ class GameManager
       for j in [9..14]
         data = {
           action: 's'
-          pos:{}
+          mess:{}
           prefabId: "loadTree"
         }
-        data.pos.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        data.pos.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        @spawn(data)
+        data.mess.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+        data.mess.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+        @spawn(data, {id: 'server'})
 
   # some codes to decide whether this operation is legal
   # if legal
@@ -43,10 +43,11 @@ class GameManager
   # allsockets.emit("object.update", data)
   #   @param [Object] data.action, and others are about the position
   #     and rotation of the object to be spawned
-  spawn: (data) =>
+  spawn: (data, reqPlayer) =>
     data.objectId = UUID();
     # store it
     @objects[data.objectId] = data
+    data.reqPlayerId = reqPlayer.id
     # send message to all clients
     for id, p of @players
       p.emit(@objectUpdateEvent,data)
@@ -56,14 +57,13 @@ class GameManager
   # remove id from the storage pool
   # allsockets.destroy("object.update", data)
   #   @param data Object
-  destroy: (data) =>
+  destroy: (data, reqPlayer) =>
     # destroy success
     if @objects[data.objectId] isnt undefined
       delete @objects[data.objectId]
-      data.player.emit(data.callback,true)
-      delete  data.player
+      reqPlayer.emit(data.callback,true)
       for id, p of @players
-        p.emit(@objectUpdateEvent,data)
+        p.emit(@objectUpdateEvent,data) if id isnt reqPlayer.id
     else
       data.player.emit(data.callback,false)
 
@@ -71,10 +71,10 @@ class GameManager
   # update the status if it's legal
   #   @param [Object] data.action is same as above, and other is some
   #     messages that need to be updated
-  update: (data) =>
+  update: (data, reqPlayer) =>
     # some checks may be done in the future
     for id, p of @players
-      p.emit(@objectUpdateEvent,data)
+      p.emit(@objectUpdateEvent,data) if id isnt reqPlayer.id
 
   # It will be too complicated to do all this work in this class
   # this function to let you use a component to listen to message and handle the message
@@ -82,7 +82,7 @@ class GameManager
   load: (comp) =>
     comp.onStartServerPlayer?()
 
-  # register the event:
+  # register the event that update the status of the GameObject in the scene
   # socket.on("object.update", (data)=>
   #   data.action structure:
   #    1. s
@@ -92,14 +92,13 @@ class GameManager
   #    3. u
   #  update the status of the object
   # )
-  #   @param player [object] a client socket
+  #   @param player [Socket] a client socket
   _registerObjectUpdate: (player) =>
     player.on(@objectUpdateEvent, (data) =>
-      data.player = player
       switch data.action
-        when 's' then @spawn(data)
-        when 'd' then @destroy(data)
-        when 'u' then @update(data)
+        when 's' then @spawn(data, player)
+        when 'd' then @destroy(data, player)
+        when 'u' then @update(data, player)
     )
 
   addPlayer: (player) =>
