@@ -65,7 +65,7 @@ class GameManager
       for id, p of @players
         p.emit(@objectUpdateEvent,data) if id isnt reqPlayer.id
     else
-      data.player.emit(data.callback,false)
+      reqPlayer.emit(data.callback,false)
 
   # check whether it's legal
   # update the status if it's legal
