@@ -63,6 +63,7 @@ class GameServer
 
   _onMessage: (player,mess) =>
 
+  # let the player find a game automatically
   findGame: (player) =>
     joined = false
     for key, game of @games
@@ -76,6 +77,8 @@ class GameServer
       @_createGame(player)
     console.log("we have " + @gameCount + " games")
 
+  # end the game
+  #   @param [Object] the game to ended
   endGame: (game) =>
     delete @games[game.id]
     @gameCount--
@@ -86,7 +89,8 @@ class GameServer
     game.startGame()
     game.started = true
 
-  # join a game
+  # let the player join the game
+  #   @param [Socket] player the player socket that will join the game.
   _joinGame: (player, game) =>
     player.send("s.j."+game.id) # tell the player he/she joined a game
 
@@ -103,6 +107,7 @@ class GameServer
     console.log('player ' + player.id + ' joined a game with id ' + player.game.id)
 
   # create a game
+  #   @param [Socket] player the player that will host the game
   _createGame: (player) =>
 
     # create a game
