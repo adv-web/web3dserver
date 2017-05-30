@@ -30,7 +30,7 @@ class GameManager
         data = {
           action: 's'
           mess:{}
-          prefabId: "loadTree"
+          prefab: "loadTree"
         }
         data.mess.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         data.mess.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15

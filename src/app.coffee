@@ -9,6 +9,7 @@ io = require('socket.io')(server)
 # server port
 port = process.env.PORT || 5000
 
+verbose = true
 
 
 #start server (http server)
