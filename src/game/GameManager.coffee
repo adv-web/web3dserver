@@ -32,8 +32,8 @@ class GameManager
           message:{}
           prefab: "loadTree"
         }
-        data.mess.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        data.mess.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+        data.message.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+        data.message.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         @spawn(data, {id: 'server'})
 
   # some codes to decide whether this operation is legal
