@@ -29,7 +29,7 @@ class GameManager
       for j in [9..14]
         data = {
           action: 's'
-          mess:{}
+          message:{}
           prefab: "loadTree"
         }
         data.mess.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
