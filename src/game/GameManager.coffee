@@ -27,13 +27,14 @@ class GameManager
     # tree
     for i in [9..14]
       for j in [9..14]
+        message = {}
+        message.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+        message.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         data = {
           action: 's'
-          message:{}
-          prefab: "loadTree"
+          message: JSON.stringify(message)
+          prefab: "tree"
         }
-        data.message.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        data.message.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         @spawn(data, {id: 'server'})
 
   # some codes to decide whether this operation is legal
