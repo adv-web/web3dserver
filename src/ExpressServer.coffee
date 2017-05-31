@@ -4,7 +4,7 @@
 verbose = true;
 # orm
 orm = require('orm')
-User = require('./entity/User')
+User = require('./domain/User')
 bodyParser = require('body-parser')
 session = require('express-session')
 cookieParser = require('cookie-parser')

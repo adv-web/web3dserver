@@ -1,5 +1,5 @@
 # Created by duocai on 2017/5/26.
-User = require('../entity/User')
+User = require('../domain/User')
 
 class UserService
   module.exports = @

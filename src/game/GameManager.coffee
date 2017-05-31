@@ -15,6 +15,8 @@ class GameManager
       @players = {}
       @playerCount = 0
       @objects ={}
+      @started = false
+      @serverReq = {id: 'server'}
       @addPlayer(@host)
       @_registerObjectUpdate(@host)
 
@@ -22,6 +24,7 @@ class GameManager
     for id, p of @players
       p.send('s.s')
     @loadTree();
+    @started = true
 
   loadTree: () =>
     # tree
@@ -30,12 +33,14 @@ class GameManager
         message = {}
         message.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         message.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        data = {
+        data =
           action: 's'
-          message: JSON.stringify(message)
+          message: JSON.stringify({
+            x: i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15,
+            y: j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+          })
           prefab: "tree"
-        }
-        @spawn(data, {id: 'server'})
+        @spawn(data, @serverReq)
 
   # some codes to decide whether this operation is legal
   # if legal
@@ -47,7 +52,8 @@ class GameManager
   spawn: (data, reqPlayer) =>
     data.objectId = UUID();
     # store it
-    @objects[data.objectId] = data
+    if reqPlayer.id is 'server'
+      @objects[data.objectId] = data
     data.reqPlayerId = reqPlayer.id
     # send message to all clients
     for id, p of @players
@@ -73,7 +79,7 @@ class GameManager
   #   @param [Object] data.action is same as above, and other is some
   #     messages that need to be updated
   update: (data, reqPlayer) =>
-    # some checks may be done in the future
+    #TODO some checks may be done in the future
     for id, p of @players
       p.emit(@objectUpdateEvent,data) if id isnt reqPlayer.id
 
@@ -93,7 +99,7 @@ class GameManager
   #    3. u
   #  update the status of the object
   # )
-  #   @param player [Socket] a client socket
+  #   @param [Socket] player a client socket
   _registerObjectUpdate: (player) =>
     player.on(@objectUpdateEvent, (data) =>
       switch data.action
@@ -103,10 +109,22 @@ class GameManager
     )
 
   addPlayer: (player) =>
+    # tell the player others joined
+    for key, player2 of @players
+      player2.send("s.oj."+player.id)
+      player.send("s.oj."+player2.id)
+
     @players[player.id] = player
     @playerCount++
     player.game = @
     @_registerObjectUpdate(player)
+
+    # tell the player game has already started
+    # and let it create the game object from the server
+    if @started
+      player.send('s.s')
+      for key, data of @objects
+        @spawn(data, @serverReq)
 
   removePlayer: (player) =>
     delete @players[player.id]
@@ -115,4 +133,4 @@ class GameManager
       p.send('s.ol.'+player.id)
     player.game == null
     @playerCount--
-    @server.endGame(@) if @playerCount == 0
+    @server.destroyGame(@) if @playerCount == 0

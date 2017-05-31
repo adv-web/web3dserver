@@ -70,34 +70,26 @@ class GameServer
       if game.playerCount < @maxPlayer
         joined = true
         @_joinGame(player, game)
-        @_startGame(game) if not game.started and game.playerCount == @maxPlayer
+        game.startGame() if not game.started and game.playerCount == @maxPlayer
         break
     # if there is no proper game, create a new one
     if not joined
       @_createGame(player)
     console.log("we have " + @gameCount + " games")
 
-  # end the game
+  # destroy the game
   #   @param [Object] the game to ended
-  endGame: (game) =>
+  destroyGame: (game) =>
     delete @games[game.id]
     @gameCount--
     console.log("game " + game.id + " was destroyed.")
     console.log("we have " + @gameCount + " games.")
 
-  _startGame:(game) =>
-    game.startGame()
-    game.started = true
 
   # let the player join the game
   #   @param [Socket] player the player socket that will join the game.
   _joinGame: (player, game) =>
     player.send("s.j."+game.id) # tell the player he/she joined a game
-
-    # tell the player others joined
-    for key, player2 of game.players
-      player2.send("s.oj."+player.id)
-      player.send("s.oj."+player2.id)
 
     # store the player message
     game.addPlayer(player)
