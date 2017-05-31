@@ -30,14 +30,14 @@ class GameManager
     # tree
     for i in [9..14]
       for j in [9..14]
-        message = {}
-        message.x = i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-        message.y = j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
         data =
           action: 's'
           message: JSON.stringify({
-            x: i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15,
-            y: j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+            position: {
+              x: i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15,
+              y: -0.9,
+              z: j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
+            }
           })
           prefab: "tree"
         @spawn(data, @serverReq)
