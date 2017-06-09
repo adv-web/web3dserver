@@ -18,7 +18,6 @@ class GameManager
       @started = false
       @serverReq = {id: 'server'}
       @addPlayer(@host)
-      @_registerObjectUpdate(@host)
 
   startGame: () =>
     for id, p of @players
@@ -124,7 +123,8 @@ class GameManager
     if @started
       player.send('s.s')
       for key, data of @objects
-        @spawn(data, @serverReq)
+        data.repPlayerId = @serverReq.id
+        p.emit(@objectUpdateEvent,data)
 
   removePlayer: (player) =>
     delete @players[player.id]
