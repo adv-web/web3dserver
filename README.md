@@ -12,14 +12,11 @@
 
 1. install [nodejs](https://nodejs.org/en/) and [npm]()
 2. install dependencies
-
-> npm install
-
+    > npm install
 3. start server：
-
-> npm start
+    > npm start
 
 ## Documentations
 
-1. [Design Documentation](./doc/design.md)
-2. [API DOC](./doc/api_doc.md): how to use apis like login, register and so on.
+1. [Design Documentation](./docs/design.md)
+2. [API DOC](./docs/api_doc.md): how to use apis like login, register and so on.

@@ -2,7 +2,7 @@
 
 #Import shared game library code.
 GameManager = require('./GameManager')
-NetWorkTransformComponent = require('./component/NetWorkTransformComponent')
+NetWorkTransform = require('./component/NetWorkTransform')
 # UUID
 UUID = require('node-uuid')
 verbose = true
@@ -10,9 +10,14 @@ verbose = true
 # This class handle the message about players create a game, players join
 # a game, players leave a game and host start a game and so on. these messages
 # are same for all games.
+#
+# It's namespace is /game
 class GameServer
   module.exports = this
 
+  # build a game server
+  #
+  # @param [SocketIO] a socket io
   constructor: (io) ->
     @games = {} # store all games
     @maxPlayer = 2 # max player number of a game
@@ -59,11 +64,14 @@ class GameServer
       ) #client.on disconnect
     ) # sio.sockets.on connection
 
+  # @nodoc
   onMessage: (player,mess) =>
 
+  # @private
   _onMessage: (player,mess) =>
 
   # let the player find a game automatically
+  # @param [Socket] player a client socket
   findGame: (player) =>
     joined = false
     for key, game of @games
@@ -78,7 +86,7 @@ class GameServer
     console.log("we have " + @gameCount + " games")
 
   # destroy the game
-  #   @param [Object] the game to ended
+  # @param [Object] the game to ended
   destroyGame: (game) =>
     delete @games[game.id]
     @gameCount--
@@ -87,19 +95,21 @@ class GameServer
 
 
   # let the player join the game
-  #   @param [Socket] player the player socket that will join the game.
+  # @param [Socket] player the player socket that will join the game.
+  # @private
   _joinGame: (player, game) =>
     player.send("s.j."+game.id) # tell the player he/she joined a game
 
     # store the player message
     game.addPlayer(player)
     # load the component that automatically synchronize the transform if this player
-    game.load(new NetWorkTransformComponent(player))
+    game.load(new NetWorkTransform(player))
     # log message
     console.log('player ' + player.id + ' joined a game with id ' + player.game.id)
 
   # create a game
-  #   @param [Socket] player the player that will host the game
+  # @param [Socket] player the player that will host the game
+  # @private
   _createGame: (player) =>
 
     # create a game

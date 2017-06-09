@@ -1,13 +1,17 @@
 # Created by duocai on 2017/5/13.
 
-
+# This server will provider some chat functions
+#
+# it namespace is /chat
 class ChatServer
   module.exports = @
 
+  # @param [SocketIO] a socket io
   constructor: (io) ->
     @io = io.of('/chat')
     @numUsers = 0
 
+  # register some chat handlers
   start: () =>
     @io.on('connection', (socket) =>
       addedUser = false
