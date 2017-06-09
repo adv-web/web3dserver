@@ -121,7 +121,7 @@ class GameServer
     @gameCount++
 
     # load the component that automatically synchronize the transform if this player
-    game.load(new NetWorkTransformComponent(player))
+    game.load(new NetWorkTransform(player))
 
     # tell the player that they are now the host
     # s=server message, h=you are hosting

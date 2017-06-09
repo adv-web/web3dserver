@@ -1,5 +1,4 @@
 # Created by duocai on 2017/5/10.
-Component = require('../Component')
 
 # Base class which should be inherited by scripts which
 # contain networking functionality on the server
