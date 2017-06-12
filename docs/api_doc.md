@@ -9,8 +9,15 @@ some data type declarations
   userObject = {
     id: number
     username: string
+    nickname: String
     password: string
     // other properties
+    level: int
+    battle_number: int
+    win_rate: float
+    equipment: String // 
+    power: int
+    rank: String
   }
   ```
 1. /session POST
@@ -64,7 +71,7 @@ some data type declarations
    {
      username: string,
      password: string,
-     // other properties
+     nickname: string
    }
      
    // return
@@ -94,7 +101,7 @@ some data type declarations
      user: userObject // new user
    }
 
-   // falil
+   // fail
    {
      success: false,
      err: err message

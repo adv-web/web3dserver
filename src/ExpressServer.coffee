@@ -5,6 +5,7 @@ verbose = true;
 # orm
 orm = require('orm')
 User = require('./domain/User')
+UserService = require('./service/UserService')
 bodyParser = require('body-parser')
 session = require('express-session')
 cookieParser = require('cookie-parser')
@@ -41,7 +42,7 @@ class ExpressServer
   start: () =>
 
     # get message of user[id]
-    @app.get('/session/', (req, res) ->
+    @app.get('/session', (req, res) ->
       if verbose
         console.log("user session: ", req.session.user)
       if req.session.user != undefined
@@ -66,30 +67,32 @@ class ExpressServer
 
       # handle register
       req.models.User.find({username: req.body.username}, (err, user) ->
-        if user.length > 0
+        if err
           result.success = false
-          result.err = "The username is already existed."
+          result.err = err
           res.send(result)
         else
-          req.models.User.create(
-            {
-              username: req.body.username
-              password: req.body.password
-            },
-            # results
-            (err, user) ->
-              result = {}
-              if err
-                result.success = false
-                result.err = err
-              else
-                # set session
-                req.session.user = user
-                result.success = true
-                result.user = user
-                if verbose
-                  console.log(user)
-              res.send(result)
+          if user.length > 0
+            result.success = false
+            result.err = "The username is already existed."
+            res.send(result)
+          else
+            req.models.User.create(
+              UserService.createUser(req.body.username,req.body.nickname,req.body.password),
+              # results
+              (err, user) ->
+                result = {}
+                if err
+                  result.success = false
+                  result.err = err
+                else
+                  # set session
+                  req.session.user = user
+                  result.success = true
+                  result.user = JSON.stringify(user)
+                  if verbose
+                    console.log(user)
+                res.send(result)
           )
       )
     )
@@ -100,16 +103,20 @@ class ExpressServer
         console.log("Login in:", req.body)
       result = {}
       req.models.User.find({username: req.body.username}, (err, user) ->
-        if user.length > 0
-          if user[0].password == req.body.username
-            req.session.user == user
-            result.success = true
-            result.user = user
+        if err
+          result.success = false
+          result.err = err
+        else
+          if user.length > 0
+            if user[0].password == req.body.username
+              req.session.user == user
+              result.success = true
+              result.user = JSON.stringify(user[0])
+            else
+              result.success = false
           else
             result.success = false
-        else
-          result.success = false
-          result.err = "username or password is wrong."
+            result.err = "username or password is wrong."
         res.send(result)
       )
     )
@@ -140,8 +147,47 @@ class ExpressServer
         else
           result.success = true
           req.session.user == undefined
+          #TODO delete the user
       else
         result.success = false
         result.err = "You have never login in."
       res.send(result)
+    )
+
+    # delete the user message
+    @app.put('/user/:id', (req, res) ->
+      if verbose
+        console.log("update user: ", req.ip)
+      result = {}
+      if req.session.user != undefined
+        if req.params.id isnt req.session.id
+          result.success = false
+          req.err = "permission denied."
+          res.send(result)
+        else
+          req.models.User.find({id:req.params.id}, (err, users) =>
+            user = user[0]
+            user.username = req.body.username
+            user.password = req.body.password
+            user.nickname = req.body.nickname
+            user.level = req.body.level
+            user.power = req.body.power
+            user.equipment = req.body.equipment
+            user.rank = req.body.rank
+            user.battle_number = req.body.battle_number
+            user.win_rate = req.body.win_rate
+            user.save((err)=>
+              if (err)
+                result.success = false
+                result.err = err
+              else
+                result.success = true
+                result.user = user
+              res.send(result)
+            )
+          )
+      else
+        result.success = false
+        result.err = "You have never login in."
+        res.send(result)
     )

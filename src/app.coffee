@@ -23,7 +23,17 @@ server.listen(port,()->
 app.get('/', (req, res) ->
   res.sendFile(__dirname + '/index.html')
 )
-
+# set all Access-Control-Allow-Origin
+app.all('/*', (req, res, next) ->
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
+  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  next()
+)
+# other specific services
+ExpressServer = require('./ExpressServer')
+new ExpressServer(app).start()
 # This handler will listen for requests on /*, any file from the root of our server.
 # See expressjs documentation for more info on routing.
 app.get( '/*' , ( req, res) ->
@@ -36,9 +46,6 @@ app.get( '/*' , ( req, res) ->
   # Send the requesting client the file.
   res.sendfile( __dirname + '/' + file )
 )# app.get *
-# other specific services
-ExpressServer = require('./ExpressServer')
-new ExpressServer(app).start()
 # end of Express Server
 
 

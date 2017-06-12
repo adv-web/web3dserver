@@ -15,5 +15,27 @@ class User
   @instance: (db) =>
     db.define('User',{
       username: String
+      nickname: String
       password: String
+      level: Number
+      battle_number: Number
+      win_rate: Number
+      equipment: String
+      power: Number
+      rank: String
     },{})
+
+#
+#    // userobject
+#  userObject = {
+#    id: number
+#    username: string
+#    nickname: String
+#    password: string
+#  // other properties
+#  level: int
+#  battle_number: int
+#  win_rate: float
+#  equipment: String //
+#  power: int
+#  }
