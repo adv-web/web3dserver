@@ -121,8 +121,8 @@ class GameManager
   addPlayer: (player) =>
     # tell the player others joined
     for key, player2 of @players
-      player2.send("s.oj."+player.id)
-      player.send("s.oj."+player2.id)
+      player2.send("s.oj."+player.info?.nickname)
+      player.send("s.oj."+player2.info?.nickname)
 
     @players[player.id] = player
     @playerCount++
@@ -149,3 +149,11 @@ class GameManager
     player.game == null
     @playerCount--
     @server.destroyGame(@) if @playerCount == 0
+
+  # update the messages of the parameter player
+  updateUserInfo: () =>
+    mess = []
+    for id, p of @players
+      mess.push(p.info)
+    for id, p of @players
+      p.emit("user.info.update", JSON.stringify(mess))

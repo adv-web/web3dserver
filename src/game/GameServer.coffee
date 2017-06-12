@@ -50,7 +50,7 @@ class GameServer
 
       # Now we want to handle some of the messages that clients will send.
       # They send messages here, and we send them to the gameServer to handle.
-      client.on('message', (m) => @onMessage(client, m))
+      client.on('user.info.update', (m) => @onMessage(client, m))
       # 'client.on message' will listen to the message from this l
 
       # When this client disconnects, we want to tell the game server
@@ -58,7 +58,7 @@ class GameServer
       # in, and make sure the other player knows that they left and so on.
       client.on('disconnect',() =>
         # Useful to know when soomeone disconnects
-        console.log('\t socket.io:: client ' + client.id + ' disconnected game  ' + client.game.id)
+        console.log('\t socket.io:: client ' + (client.info?.nickname) + ' disconnected game  ' + client.game.id)
         # remove the player from his game if he is in some game
         client.game?.removePlayer(client)
       ) #client.on disconnect
@@ -66,6 +66,8 @@ class GameServer
 
   # @nodoc
   onMessage: (player,mess) =>
+    player.info = mess
+    player.game?.updateUserInfo()
 
   # @private
   _onMessage: (player,mess) =>
