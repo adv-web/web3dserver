@@ -135,7 +135,7 @@ class GameManager
       player.send('s.s')
       for key, data of @objects
         data.repPlayerId = @serverReq.id
-        p.emit(@objectUpdateEvent,data)
+        player.emit(@objectUpdateEvent,data)
 
   # remove the player from this game. And if then the game number is 0,
   # the game will be destroyed.
