@@ -154,6 +154,7 @@ class GameManager
   updateUserInfo: () =>
     mess = []
     for id, p of @players
-      mess.push(p.info)
+      if p.info
+        mess.push(p.info)
     for id, p of @players
       p.emit("user.info.update", JSON.stringify(mess))
