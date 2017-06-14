@@ -110,12 +110,13 @@ class ExpressServer
           result.err = err
         else
           if user.length > 0
-            if user[0].password == req.body.username
+            if user[0].password == req.body.password
               req.session.user == user
               result.success = true
               result.user = JSON.stringify(user[0])
             else
               result.success = false
+              result.err = "username or password is wrong."
           else
             result.success = false
             result.err = "username or password is wrong."
