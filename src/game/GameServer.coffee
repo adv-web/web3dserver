@@ -22,7 +22,7 @@ class GameServer
   # @param [SocketIO] a socket io
   constructor: (io) ->
     @games = {} # store all games
-    @maxPlayer = 2 # max player number of a game
+    @maxPlayer = 5 # max player number of a game
     @gameCount = 0 #
     @io = io.of('/game') # register namespace to /game
 

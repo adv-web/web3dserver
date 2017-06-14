@@ -11,7 +11,7 @@ class UserService
 
   @createUser: (username, nickname, password,
     level=1, battle_number=0, win_rate=100,
-    equipment="铁甲", power=1000, rank="新兵",
+    equipment="中坦", power=300, rank="新兵",
     hp=1, type='MT', exp=0) =>
     user = {
       username: username,
