@@ -169,7 +169,7 @@ class ExpressServer
           res.send(result)
         else
           req.models.User.find({id:req.params.id}, (err, users) =>
-            user = user[0]
+            user = users[0]
             user.username = req.body.username
             user.password = req.body.password
             user.nickname = req.body.nickname
@@ -179,6 +179,9 @@ class ExpressServer
             user.rank = req.body.rank
             user.battle_number = req.body.battle_number
             user.win_rate = req.body.win_rate
+            user.hp = req.body.hp
+            user.exp = req.body.exp
+            user.type = req.body.type
             user.save((err)=>
               if (err)
                 result.success = false

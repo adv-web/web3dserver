@@ -18,7 +18,17 @@ class GameManager
       @objects ={}
       @started = false
       @serverReq = {id: 'server'}
+      @comps = []
       @addPlayer(@host)
+
+
+  # It will be too complicated to do all this work in this class
+  # this function to let you use a component to listen to message and handle the message
+  #
+  # @param [NetWorkComponent] the component to listen to message and handle the message
+  registerComponent: (comp) =>
+    @comps.push(comp) # register this component
+    comp.onRegister?(@)
 
   # start the game
   #
@@ -26,25 +36,27 @@ class GameManager
   startGame: () =>
     for id, p of @players
       p.send('s.s')
-    @loadTree();
+
+    # start game
+    for comp in @comps
+      comp.onStartGame?(@)
+
     @started = true
 
-  # @private
-  loadTree: () =>
-    # tree
-    for i in [9..14]
-      for j in [9..14]
-        data =
-          action: 's'
-          message: JSON.stringify({
-            position: {
-              x: i * 0.48 - 5.76 + Math.random() * 0.3 - 0.15,
-              y: -0.9,
-              z: j * 0.48 - 5.76 + Math.random() * 0.3 - 0.15
-            }
-          })
-          prefab: "tree"
-        @spawn(data, @serverReq)
+  # end the game
+  #
+  # this method will inform all clients to end game
+  endGame: () =>
+    # inform all clients
+    for id, p of @players
+      p.send('s.e')
+
+    # end game
+    for comp in @comps
+      comp.onEndGame?(@)
+
+    # destroy this game
+    @server.destroyGame(@)
 
   # decide whether this operation is legal and inform all clients if it's legal
   #
@@ -86,13 +98,6 @@ class GameManager
     #TODO some checks may be done in the future
     for id, p of @players
       p.emit(@objectUpdateEvent,data) if id isnt reqPlayer.id
-
-  # It will be too complicated to do all this work in this class
-  # this function to let you use a component to listen to message and handle the message
-  #
-  # @param [NetWorkComponent] the component to listen to message and handle the message
-  load: (comp) =>
-    comp.onStartServerPlayer?()
 
   # register the event that update the status of the GameObject in the scene
   # socket.on("object.update", (data)=>
@@ -148,7 +153,7 @@ class GameManager
       p.send('s.ol.'+player.id)
     player.game == null
     @playerCount--
-    @server.destroyGame(@) if @playerCount == 0
+    @endGame() if @playerCount == 0
 
   # update the messages of the parameter player
   updateUserInfo: () =>

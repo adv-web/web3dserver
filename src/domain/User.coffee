@@ -23,6 +23,9 @@ class User
       equipment: String
       power: Number
       rank: String
+      hp: Number
+      type: String
+      exp: Number
     },{})
 
 #

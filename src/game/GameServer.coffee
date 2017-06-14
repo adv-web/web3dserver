@@ -3,6 +3,8 @@
 #Import shared game library code.
 GameManager = require('./GameManager')
 NetWorkTransform = require('./component/NetWorkTransform')
+TreeLoader = require('./component/TreeLoader')
+GameTimeInformer = require('./component/GameTimeInformer')
 # UUID
 UUID = require('node-uuid')
 verbose = true
@@ -20,7 +22,7 @@ class GameServer
   # @param [SocketIO] a socket io
   constructor: (io) ->
     @games = {} # store all games
-    @maxPlayer = 5 # max player number of a game
+    @maxPlayer = 2 # max player number of a game
     @gameCount = 0 #
     @io = io.of('/game') # register namespace to /game
 
@@ -105,7 +107,7 @@ class GameServer
     # store the player message
     game.addPlayer(player)
     # load the component that automatically synchronize the transform if this player
-    game.load(new NetWorkTransform(player))
+    game.registerComponent(new NetWorkTransform(player))
     # log message
     console.log('player ' + player.id + ' joined a game with id ' + player.game.id)
 
@@ -123,7 +125,12 @@ class GameServer
     @gameCount++
 
     # load the component that automatically synchronize the transform if this player
-    game.load(new NetWorkTransform(player))
+    game.registerComponent(new NetWorkTransform(player))
+    # load the component that will init tree when the game starts
+    game.registerComponent(new TreeLoader())
+    # load game time informer
+    game.registerComponent(new GameTimeInformer())
+
 
     # tell the player that they are now the host
     # s=server message, h=you are hosting

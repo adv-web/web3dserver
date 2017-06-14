@@ -17,7 +17,7 @@ class NetWorkTransform extends NetWorkComponent
 
 
   # register the handler to handle the transform synchronization work.
-  onStartServerPlayer: () =>
+  onRegister: () =>
     @player.on("nwtc", (data) =>
       for id, p of @player.game.players
         p.emit(data.event, data) if @player.id  != id
