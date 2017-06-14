@@ -10,3 +10,4 @@ node_modules/
 !src/static/*
 
 
+npm-debug.log

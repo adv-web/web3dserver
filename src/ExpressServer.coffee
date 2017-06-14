@@ -33,7 +33,9 @@ class ExpressServer
     @app.use(bodyParser.urlencoded({extended: false}))
     @app.use(cookieParser())
     @app.use(session({
-      secret: "web3d server"
+      secret: "web3d server",
+      resave: false,
+      saveUninitialized: true
     }))
 
   # start server
