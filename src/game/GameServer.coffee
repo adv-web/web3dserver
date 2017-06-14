@@ -58,7 +58,7 @@ class GameServer
       # in, and make sure the other player knows that they left and so on.
       client.on('disconnect',() =>
         # Useful to know when soomeone disconnects
-        console.log('\t socket.io:: client ' + (client.info?.nickname) + ' disconnected game  ' + client.game.id)
+        console.log('\t socket.io:: client ' + client.id + ' disconnected game  ' + client.game.id)
         # remove the player from his game if he is in some game
         client.game?.removePlayer(client)
       ) #client.on disconnect
