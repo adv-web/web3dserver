@@ -1,14 +1,16 @@
 # Created by duocai on 2017/5/26.
 User = require('../domain/User')
 
-# @nodoc
+# the user service that provide service like create a user
 class UserService
   module.exports = @
 
+  # @nodoc
   constructor: (db) ->
     @userDao = User.instance(db)
 
 
+  # create a user
   @createUser: (username, nickname, password,
     level=1, battle_number=0, win_rate=100,
     equipment="中坦", power=300, rank="新兵",
