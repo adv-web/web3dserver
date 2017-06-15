@@ -160,6 +160,7 @@ class GameManager
     mess = []
     for id, p of @players
       if p.info
+        p.info.uuid = id
         mess.push(p.info)
     for id, p of @players
       p.emit("user.info.update", JSON.stringify(mess))
