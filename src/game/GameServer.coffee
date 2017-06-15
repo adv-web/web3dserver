@@ -127,7 +127,7 @@ class GameServer
     # load the component that automatically synchronize the transform if this player
     game.registerComponent(new NetWorkTransform(player))
     # load the component that will init tree when the game starts
-    game.registerComponent(new TreeLoader())
+    # game.registerComponent(new TreeLoader())
     # load game time informer
     game.registerComponent(new GameTimeInformer())
 
