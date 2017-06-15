@@ -126,8 +126,8 @@ class GameManager
   addPlayer: (player) =>
     # tell the player others joined
     for key, player2 of @players
-      player2.send("s.oj."+player.id + "_ " + player.info?.nickname)
-      player.send("s.oj."+player2.id + "_ " + player2.info?.nickname)
+      player2.send("s.oj."+player.id)
+      player.send("s.oj."+player2.id)
 
     @players[player.id] = player
     @playerCount++
