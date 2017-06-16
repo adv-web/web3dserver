@@ -1,17 +1,19 @@
 # Created by duocai on 2017/5/10.
 
-#Import shared game library code.
 GameManager = require('./GameManager')
 NetWorkTransform = require('./component/NetWorkTransform')
 TreeLoader = require('./component/TreeLoader')
 GameTimeInformer = require('./component/GameTimeInformer')
-# UUID
 UUID = require('node-uuid')
 verbose = true
 
 # This class handle the message about players create a game, players join
-# a game, players leave a game and host start a game and so on. these messages
-# are same for all games.
+# a game, players leave a game and host start a game and so on.
+#
+# It will set up a game according to the request to the user.
+# @example
+#   # if the host of the game want to add some tree in the game
+#   game.registerComponent(new TreeLoader(player))
 #
 # It's namespace is /game
 class GameServer
@@ -34,10 +36,10 @@ class GameServer
     # as well as give that client a unique ID to use so we can
     # maintain the list if players.
     @io.on('connection', (client) =>
-    # here, 'client' is a socket
-    # Generate a new UUID, looks something like
-    # 5b2ca132-64bd-4513-99da-90e838ca47d1
-    # and store this on their socket/connection
+      # here, 'client' is a socket
+      # Generate a new UUID, looks something like
+      # 5b2ca132-64bd-4513-99da-90e838ca47d1
+      # and store this on their socket/connection
       client.id = UUID()
 
       # tell the player they connected, giving them their id
@@ -100,7 +102,6 @@ class GameServer
 
   # let the player join the game
   # @param [Socket] player the player socket that will join the game.
-  # @private
   _joinGame: (player, game) =>
     player.send("s.j."+game.id) # tell the player he/she joined a game
 
@@ -113,7 +114,6 @@ class GameServer
 
   # create a game
   # @param [Socket] player the player that will host the game
-  # @private
   _createGame: (player) =>
 
     # create a game

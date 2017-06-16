@@ -6,6 +6,7 @@
 class ChatServer
   module.exports = @
 
+  # create a chat server in namespace /chat
   # @param [SocketIO] a socket io
   constructor: (io) ->
     @io = io.of('/chat')

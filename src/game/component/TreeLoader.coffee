@@ -8,6 +8,7 @@ NetWorkComponent = require('./NetWorkComponent')
 class TreeLoader extends NetWorkComponent
   module.exports = @
 
+  # create a tree loader
   constructor: () ->
     super "TreeLoader"
 

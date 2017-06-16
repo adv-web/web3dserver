@@ -7,6 +7,7 @@ NetWorkComponent = require('./NetWorkComponent')
 class GameTimeInformer extends NetWorkComponent
   module.exports = @
 
+  # create a game time informer
   constructor: () ->
     super "GameTimeInformer"
 

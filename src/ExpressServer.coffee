@@ -10,10 +10,10 @@ bodyParser = require('body-parser')
 session = require('express-session')
 cookieParser = require('cookie-parser')
 
-# The express server handles passing our content to the browser,
-# As well as routing users where they need to go. This example is bare bones
-# and will serve any file the user requests from the root of your web server (where you launch the script from)
-# so keep this in mind - this is not a production script but a development teaching tool.
+# The express server handles passing our content to the browser.
+#
+# It will listen to the requests like login, register, update user
+#
 class ExpressServer
   module.exports = @
 
@@ -23,7 +23,7 @@ class ExpressServer
   # @param [Express] app Express app.
   constructor: (@app) ->
     # create database connection
-    @app.use(orm.express("mysql://root:123456@120.76.125.35:3306/web3d", {
+    @app.use(orm.express("mysql://root:123456@localhost:3306/web3d", {
       # register models
       define: (db, models, next) =>
         models.User = User.instance?(db)
