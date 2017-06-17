@@ -172,7 +172,13 @@
 
    以此种方法就可以创建类型多样的游戏，玩家可以定制游戏中的一些会发生的事件。
 
-## Related Docs
+## 4 数据库设计
+
+​	该实现没有复杂的数据库，只有一张user表已提供登录注册服务和玩家等级、军衔信息的持久化。表结构如下：
+
+​	![databse](docs/img/db.PNG)
+
+## 5 Related Docs
 
 1. [项目文档](https://adv-web.github.io/web3dserver/doc/)
 2. [Design Daft](./docs/design.md)
